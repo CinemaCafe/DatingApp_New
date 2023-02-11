@@ -40,7 +40,8 @@ export class NavComponent implements OnInit {
       },
       error: err => {
         //console.log(err.error)
-        this.toastr.error(err.error);
+        // remove the error message because that's being handled inside our intercepter now.
+        //this.toastr.error(err.error);
       }
     });
   }
