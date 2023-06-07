@@ -36,6 +36,7 @@ export class NavComponent implements OnInit {
       next: respone => {
         // console.log(respone);
         // this.loggedIn = true;
+        // navigate to members page
         this.router.navigateByUrl("/members");
       },
       error: err => {
@@ -45,7 +46,7 @@ export class NavComponent implements OnInit {
       }
     });
   }
-
+	
   logout() {
     // remove item from localStorage
     this.accountService.logout();

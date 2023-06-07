@@ -14,6 +14,8 @@ namespace API.Helpers
                     opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CaluateAge()));
             CreateMap<Photo, PhotoDto>();
+            // CreateMap is a generic method that takes two parameters: the source type and the destination type
+            CreateMap<MemberUpdateDto, AppUser>();
         }
     }
 }

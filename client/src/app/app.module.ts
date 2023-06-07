@@ -21,6 +21,8 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     TestErrorComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    MemberCardComponent
+    MemberCardComponent,
+    MemberEditComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -44,6 +47,7 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     // for http request
     HttpClientModule,
     FormsModule,
+    // for shared module created by us
     SharedModule
   ],
   // for Interceptors here
@@ -51,7 +55,9 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     // for http erro exception
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     // for jwt token
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    // for loading spinner
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
