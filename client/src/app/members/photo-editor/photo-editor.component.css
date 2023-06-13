@@ -1,0 +1,8 @@
+/* if we have a file being hovered over, then this style is going to be applied. */
+.nv-file-over {
+    border: dotted 3px red;
+}
+
+input[type="file"] {
+    color: transparent;
+}

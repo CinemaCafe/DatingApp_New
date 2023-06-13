@@ -7,6 +7,7 @@ import { Member } from 'src/app/_models/member';
   styleUrls: ['./member-card.component.css']
 })
 export class MemberCardComponent implements OnInit {
+  // to pass data from parent to child component
   @Input() member: Member | undefined;
 
   constructor() { }

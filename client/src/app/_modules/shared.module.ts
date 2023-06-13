@@ -5,6 +5,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [],
@@ -21,8 +22,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
       // we can pass in a config object to the forRoot() method
       {
         type: "line-scale-party",
-      }
-    )
+      }),
+    FileUploadModule
 
   ],
   // we need to export these modules so that we can use them in other modules
@@ -31,7 +32,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ToastrModule,
     TabsModule,
     NgxGalleryModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FileUploadModule
   ]
 })
 export class SharedModule { }
