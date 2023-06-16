@@ -62,6 +62,7 @@ export class AccountService {
 
   setCurrentUser(user: User) {
     localStorage.setItem("user", JSON.stringify(user));
+    // set value to observable
     this.currentUserSource.next(user);
   }
 

@@ -32,6 +32,7 @@ using var scope = app.Services.CreateScope();
 
 var services = scope.ServiceProvider;
 
+// get the data context
 try
 {
     var context = services.GetRequiredService<DataContext>();

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -12,24 +13,48 @@ export class RegisterComponent implements OnInit {
   // @Input() usersFromHomeComponent: any;
   @Output() cancelRegister = new EventEmitter();
   model: any = {}
+  registerForm: FormGroup = new FormGroup({});
 
   constructor(private accountService: AccountService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.initializeForm();
   }
 
-  register() {
-    //console.log(this.model);
-    this.accountService.register(this.model).subscribe({
+  initializeForm() {
+    this.registerForm = new FormGroup({
+      username: new FormControl("", Validators.required),
+      password: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
+      confirmPassword: new FormControl("", [Validators.required, this.matchValues('password')])
+    });
+
+    this.registerForm.controls["password"].valueChanges.subscribe({
       next: () => {
-        //console.log(response);
-        this.cancel();
-      },
-      error: err => {
-        console.log(err);
-        this.toastr.error(err);
+        this.registerForm.controls["confirmPassword"].updateValueAndValidity();
       }
-    })
+    });
+  }
+
+  // custom validator for password and confirmPassword
+  matchValues(matchTo: string) : ValidatorFn {
+    return (control: AbstractControl) => {
+      return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true}
+    }
+  } 
+
+  register() {
+    console.log(this.registerForm?.value);
+    //console.log(this.model);
+    // this.accountService.register(this.model).subscribe({
+    //   next: () => {
+    //     //console.log(response);
+    //     this.cancel();
+    //   },
+    //   error: err => {
+    //     console.log(err);
+    //     this.toastr.error(err);
+    //   }
+    // })
   }
 
   cancel() {
