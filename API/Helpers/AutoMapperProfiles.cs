@@ -16,6 +16,7 @@ namespace API.Helpers
             CreateMap<Photo, PhotoDto>();
             // CreateMap is a generic method that takes two parameters: the source type and the destination type
             CreateMap<MemberUpdateDto, AppUser>();
+            CreateMap<RegisterDto, AppUser>();
         }
     }
 }

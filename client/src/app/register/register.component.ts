@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,20 +13,33 @@ export class RegisterComponent implements OnInit {
   // input component from HomeComponent
   // @Input() usersFromHomeComponent: any;
   @Output() cancelRegister = new EventEmitter();
-  model: any = {}
+  // model: any = {}
   registerForm: FormGroup = new FormGroup({});
+  maxDate: Date = new Date();
+  validationsErrors: string[] | undefined;
 
-  constructor(private accountService: AccountService, private toastr: ToastrService) { }
+  constructor(private accountService: AccountService, private toastr: ToastrService, private fb : FormBuilder, private router: Router) { }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
   }
 
   initializeForm() {
-    this.registerForm = new FormGroup({
-      username: new FormControl("", Validators.required),
-      password: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
-      confirmPassword: new FormControl("", [Validators.required, this.matchValues('password')])
+    // this.registerForm = new FormGroup({
+    //   username: new FormControl("", Validators.required),
+    //   password: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
+    //   confirmPassword: new FormControl("", [Validators.required, this.matchValues('password')])
+    // });
+    this.registerForm = this.fb.group({
+      gender: ["male"],
+      username: ["", Validators.required],
+      knownAs: ["", Validators.required],
+      dateOfBirth: ["", Validators.required],
+      city: ["", Validators.required],
+      country: ["", Validators.required],
+      password: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      confirmPassword: ["", [Validators.required, this.matchValues('password')]]
     });
 
     this.registerForm.controls["password"].valueChanges.subscribe({
@@ -43,22 +57,33 @@ export class RegisterComponent implements OnInit {
   } 
 
   register() {
-    console.log(this.registerForm?.value);
+    const dob = this.getDateOnly(this.registerForm.controls["dateOfBirth"].value);
+    const values = {...this.registerForm.value, dateOfBirth: dob};
+    // console.log(values);
     //console.log(this.model);
-    // this.accountService.register(this.model).subscribe({
-    //   next: () => {
-    //     //console.log(response);
-    //     this.cancel();
-    //   },
-    //   error: err => {
-    //     console.log(err);
-    //     this.toastr.error(err);
-    //   }
-    // })
+    // get value from registerForm
+    this.accountService.register(values).subscribe({
+      next: () => {
+        //console.log(response);
+        // this.cancel();
+        this.router.navigateByUrl("/members");
+      },
+      error: err => {
+        // console.log(err);
+        // this.toastr.error(err);
+        this.validationsErrors = err;
+      }
+    })
   }
 
   cancel() {
     // do anything in emit();
     this.cancelRegister.emit(false);
+  }
+
+  private getDateOnly(dob: string | undefined) {
+    if(!dob) return;
+    let theDob = new Date(dob);
+    return new Date(theDob.setMinutes(theDob.getMinutes() - theDob.getTimezoneOffset())).toISOString().slice(0, 10);
   }
 }
